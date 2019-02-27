@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+	{% if message|length > 1 %}
+    	{{message}}
+    {% else %}
+    	U are new to site Please Register you wont regret
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+	<h2>Please read the teams and conditions and fill your credentials and you are ready to go</h2>
+	<br>
+	<br>
+    <form action="{{ url_for('create_account') }}" method="post">
+        <input type="text" name="name" placeholder="Enter Your Name">
+        <input type="text" name="username" placeholder="Enter Your username">
+        <input type="password" name="password" placeholder="Enter your password">
+        <button>Submit</button>
+    </form>
+{% endblock %}
