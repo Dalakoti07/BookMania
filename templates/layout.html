@@ -8,14 +8,19 @@
 			  font-family:      Verdana, Geneva, Arial, sans-serif;
 			  font-size:        medium;
 			  background-color: tan;
-			  margin:           5em 5em 5em 5em;
+			}
+			.main-heading
+			{
+			  background-color: white;
+			  margin:           2em;
 			  border:           1px dotted gray;
-			  padding:          1em 1em 1em 1em;
+			  padding:			1em;
 			}
 
         </style>
     </head>
     <body>
+
         <h1>{% block heading %}{% endblock %}</h1>
 
         {% block body %}
