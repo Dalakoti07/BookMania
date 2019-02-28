@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block heading %}
+		Search your favourite books
+{% endblock %}
+
+{% block body %}
+	<h2>Please fill in the filters on which basis you want to search the books</h2>
+	<br>
+	<br>
+    <form action="{{ url_for('fetch_data') }}" method="post">
+        <input type="text" name="ISBN" placeholder="Enter ISBN">
+        <input type="text" name="title" placeholder="Enter title of the book">
+        <input type="text" name="author" placeholder="Enter author name">
+        <button>Submit</button>
+    </form>
+{% endblock %}
