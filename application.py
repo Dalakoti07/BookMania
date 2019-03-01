@@ -40,7 +40,7 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-	if session[username]!=None :
+	if username!="" :
 	    return render_template('home.html',name=session[username])
 	else:
 	    return render_template('home.html',name="")
@@ -107,33 +107,59 @@ def search():
 
 @app.route("/fetch_data",methods=["POST"])
 def fetch_data():
+	# what if user didnot apply any filter
 	x=request.form.get("ISBN")
 	y=request.form.get("author")
 	z=request.form.get("title")
 	isbn=author=title=""
-	if len(x)>0:
+	if len(x)>0 and len(y)>0 and len(z)>0:
+		# if user has used all the valid filters
 		isbn=x
 		isbn='%'+isbn+'%'
-	if len(y)>0:
 		author=y
 		author='%'+author+'%'
-	if len(z)>0:
 		title=z
 		title='%'+title+'%'
+		booklist=db.execute("SELECT * FROM book_record where id like :isbn and title like :title and author like :author" , {"isbn": isbn,"title":title,"author":author})
+
+	elif len(y)==0 and len(x)>=1 and len(z)>=1:
+		# if isbn and title are valid
+		isbn=x
+		isbn='%'+isbn+'%'
+		title=z
+		title='%'+title+'%'
+		booklist=db.execute("SELECT * FROM book_record where id like :isbn and title like :title " , {"isbn": isbn,"title":title})
+	elif len(z)==0 and len(x)>=1 and len(y)>=1:
+		# if we have valid isbn and author only
+		isbn=x
+		isbn='%'+isbn+'%'
+		author=y
+		author='%'+author+'%'
+		booklist=db.execute("SELECT * FROM book_record where id like :isbn and author like :author" , {"isbn": isbn,"author":author})
+	
+	elif len(x)==0 and len(y)>0 and len(z)>0:
+		# we have valid author and title only
+		author=y
+		author='%'+author+'%'
+		title=z
+		title='%'+title+'%'
+		booklist=db.execute("SELECT * FROM book_record where title like :title and author like :author" , {"title":title,"author":author})
+	else:
+		return '<h1>Enter some valid filters, you didnot apply any of them </h1>'
+	
 	# let us try for small search ,search only isbn
 	# make cases when two filter are empty or one is empty
-	booklist=db.execute("SELECT * FROM book_record where id like :isbn or title like :title or author like :author" , {"isbn": isbn,"title":title,"author":author}).fetchall()
+	#booklist=db.execute("SELECT * FROM book_record where id like :isbn and title like :title and author like :author" , {"isbn": isbn,"title":title,"author":author}).fetchall()
 	db.commit()
-	booklist=get_info(booklist)
-	#return str(len(booklist))
-	#for i in booklist:
-	#	print(i,file=sys.stderr)
-	#return str(booklist)
-	return render_template('book_info.html',booklist=booklist)
-'''
-@app.route("/change_password")
-def change_pass():
-'''
+	list_book=[]
+	for b in booklist:
+		list_book.append(b)
+	return render_template('book_info.html',booklist=list_book)
+	#return str(list_book)
+	# too much work for api donot do it hear booklist=get_info(list_book)
+	#print(booklist)
+
+	
 
 # We donot require it @app.route("/api_request",methods=["POST"])# only the pages can ask for the details
 def get_info(booklist):
@@ -145,11 +171,14 @@ def get_info(booklist):
 	# what we should do is make a page for search about the books and then get the information from database into a list and that list passed to this function and then we append more data to it about ,average rating and then at last rendering the page and giving it the data to display in beautiful table format
 	final_list=[]
 	for b in booklist:
+		b=list(b)
 		res=requests.get("https://www.goodreads.com/book/review_counts.json",params={"key":"44ZCyFojgwqbYPzQ2vfw","isbns":b[0]})
 		#b.append(res.json()['books'][0]['average_score'])
 		if res != None:
-			if 'average_score' in res.json()['books'][0]:
-				final_list.append(b+(res.json()['books'][0]['average_score'],))
-			else :
-				final_list.append(b)
+			rating=res.json()['books'][0]['average_rating']
+			#rating=str(rating)
+			b=b.append(rating)
+			final_list.append(b)
+		else :# in case we have no ratng for a book
+			final_list.append(b)
 	return final_list
