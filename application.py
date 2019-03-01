@@ -41,17 +41,17 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
 	if username!="" :
-	    return render_template('home.html',name=session[username])
+	    return render_template('home2.html',name=session[username])
 	else:
-	    return render_template('home.html',name="")
+	    return render_template('home2.html',name="")
 
 # this is the login page
 @app.route("/login")
 def login():
-	return render_template('login.html')
+	return render_template('login2.html')
 
 # this woul be the first page seen by the user when he is loged in
-@app.route("/welcome",methods=["POST"])
+@app.route("/welcome",methods=["POST","GET"])
 def welcome():
 	name=request.form.get("name")
 	username=request.form.get("username")
@@ -62,10 +62,10 @@ def welcome():
 	if password_from_db is None:# means there is no user
 		return render_template('register.html')
 	if password_from_db[0]!=password:
-		return render_template('login.html',message="U have forgot your password or username")
+		return render_template('login2.html',message="U have forgot your password or username")
 	# make entry in the session
 	session['username']=username
-	return render_template('welcome.html',name=name)
+	return render_template('welcome2.html',name=name)
 
 @app.route("/logout")
 def logout():
@@ -80,9 +80,9 @@ def register():
 	# if u are creating a new account then logout from current session
 	logout()
 	# what is happening is home page is being and then register.html is being rendered
-	return render_template('register.html',register="")
+	return render_template('register2.html',register="")
 
-@app.route("/create_account",methods=["POST"])
+@app.route("/create_account",methods=["POST","GET"])
 def create_account():
 	# if u are creating a new account then logout from current session
 	logout()
@@ -97,15 +97,15 @@ def create_account():
 		db.commit()
 		# creating a session here , that is when user has made a new account
 		session['username']=username
-		return render_template('welcome.html',name=name+" Your account has been created")
+		return render_template('welcome2.html',name=name+" Your account has been created")
 	else:
 		return render_template('register.html',message="Please try with different user name")
 
 @app.route("/search")
 def search():
-	return render_template('search_query.html')
+	return render_template('search_query2.html')
 
-@app.route("/fetch_data",methods=["POST"])
+@app.route("/fetch_data",methods=["POST","GET"])
 def fetch_data():
 	# what if user didnot apply any filter
 	x=request.form.get("ISBN")
@@ -154,12 +154,15 @@ def fetch_data():
 	list_book=[]
 	for b in booklist:
 		list_book.append(b)
-	return render_template('book_info.html',booklist=list_book)
+	return render_template('booklist.html',booklist=list_book)
 	#return str(list_book)
 	# too much work for api donot do it hear booklist=get_info(list_book)
 	#print(booklist)
 
-	
+'''@app.route('/book/<string:isbn>')
+def book_data():
+'''
+
 
 # We donot require it @app.route("/api_request",methods=["POST"])# only the pages can ask for the details
 def get_info(booklist):

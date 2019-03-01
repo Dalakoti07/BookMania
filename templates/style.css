@@ -1,0 +1,32 @@
+.container h1
+{
+  text-align: center;
+}
+
+.container-fluid img
+{
+  float:right;
+}
+.jumbotron
+{
+  padding:200px 0 140px 0;
+  margin-left:70px;;
+}
+.container-fluid p {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 2em;
+}
+.education table {
+  margin: 2em;
+  border-collapse: collapse;
+  width:90%;
+}
+.education tr
+{
+  line-height: 3em;
+}
+.education th, td {
+  text-align: left;
+  padding: 1em;
+}
+.education tr:hover {background-color:#b8c1d1;}

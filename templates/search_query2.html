@@ -1,0 +1,47 @@
+<!--Will host /search html file -->
+<!DOCTYPE html>
+<html>
+    <head>
+    	<link rel="stylesheet" href="style.css">
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+         <meta charset="utf-8">
+         <meta name="viewport" content ="width=device-width,initial-scale=1">
+        <title>Introduction</title>
+    </head>
+    <body>
+    	<nav class="navbar navbar-inverse">
+		  <div class="container-fluid">
+		    <div class="navbar-header">
+		      <a class="navbar-brand" >Hi Welcome</a>
+		    </div>
+		    <ul class="nav navbar-nav">
+		      <li class="active"><a href="#">Home</a></li>
+		      <li><a href="#">Search</a></li>
+		    </ul>
+		  </div>
+		</nav>
+		<div class="container">
+<form  method="POST" action="{{ url_for('fetch_data') }}">
+  <div class="form-group">
+    <label >ISBN Number</label>
+    <input type="text" name="isbn" class="form-control"placeholder="ISBN number">
+    <small class="form-text text-muted">If you know some characters of the isbn ,it is okay we would do the hardwork for you </small>
+  </div>
+  <div class="form-group">
+    <label >Title</label>
+    <input type="text" name="title" class="form-control" placeholder="Title">
+  </div>
+  <div class="form-group">
+    <label >Author</label>
+    <input type="text" name="author" class="form-control" placeholder="Author">
+  </div>
+  <br>
+  <br>
+  <a href="\booklist" class="btn btn-primary" role="button">Submit</a>
+</form>                                                                             
+  
+</div>
+
+
+		</body>
+</html>
