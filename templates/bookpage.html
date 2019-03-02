@@ -25,15 +25,15 @@
   <table class="table" >
     <thead>
       <tr>
-      <th>ISBN</th>
-      <th>Title</th>
-      <th>Author Name</th>
-      <th>Year</th>
+      <th scope="col">ISBN</th>
+      <th scope="col">Title</th>
+      <th scope="col">Author Name</th>
+      <th scope="col">Year</th>
     </tr>
       {%for i in booklist%}
     <tr>
         {% for j in i%}
-        <td>{{j}}</td>
+        <td><a href ="/login">{{j}}</a></td>
         {% endfor%}
     </tr>
       {%endfor%}

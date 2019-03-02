@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+ <br>
+<div class="container">
+  <div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title" >ISBN</h4>
+      <p class="card-text">{{details[0]}}</p>
+      <h4 class="card-title" class="text-center">Title</h4>
+      <p class="card-text">{{details[1] }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title" >Author</h4>
+      <p class="card-text">{{details[2]}}</p>
+      <h4 class="card-title" >Year</h4>
+      <p class="card-text">{{details[3]}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+       <h4 class="card-title" >Rating on Goodreads</h4>
+      <p class="card-text">{{details[4]}}</p>
+      </div>
+    </div>
+  </div>
+<div class="col-sm-6">
+    <div class="card">
+      <div class="card-body">
+       <h4 class="card-title" >Reviews on Goodreads</h4>
+      <p class="card-text">{{details[5]}}</p>
+      </div>
+    </div>
+  </div>
+    </div>
+  <br>
+  <h4>Your Review on this book</h4>
+  <form action="" method="POST">
+    <select name="cars" class="custom-select">
+    <option selected>Stars</option>
+    <option value="volvo">1</option>
+    <option value="fiat">2</option>
+    <option value="audi">3</option>
+    <option value="audi">4</option>
+    <option value="audi">5</option>
+    </select>
+  <div class="form-group">
+  <label for="comment">Please share your experience</label>
+  <textarea name="comments"class="form-control" rows="5" id="comment"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  </div>
+</body>
+</html>
