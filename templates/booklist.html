@@ -34,7 +34,7 @@
       {%for i in booklist%}
     <tr>
         {% for j in i%}
-        <td>{{j}}</td>
+        <td><a href ="/book/{{i[0]}}">{{j}}</a></td>
         {% endfor%}
     </tr>
       {%endfor%}
