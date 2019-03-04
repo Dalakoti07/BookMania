@@ -69,13 +69,14 @@ def welcome():
 	name=request.form.get("name")
 	username=request.form.get("username")
 	password=request.form.get("password")
+	password=hash(password)
 	# check if the correct user logged in or not
 	password_from_db=db.execute("SELECT password FROM users_record where username =:username", {"username": username}).fetchone()
 	# if we donot find any user then prompt the page saying that wrong credentials entered ,and give the option of forget password
 	if password_from_db is None:# means there is no user
-		return render_template('register2.html')
+		return redirect('/register')
 	if password_from_db[0]!=password:
-		return redirect(url_for('login'))
+		return redirect(url_for('/login'))
 		#return render_template('login2.html',message="U have forgot your password or username")
 	# make entry in the session
 	session['username']=username
@@ -85,6 +86,20 @@ def welcome():
 @app.route("/success")
 def success():
 	return render_template('success.html')
+
+# incomplete
+@app.route('/post/<string:isbn>',methods=['POST'])
+def post(isbn):
+	if 'username' in session:
+		review_text=request.form.get("comments")
+		username=session['username']
+		id_from_db=db.execute("SELECT id FROM users_record where username =:username", {"username": username}).fetchone()
+		id_user=id_from_db[0]
+		db.execute("INSERT INTO review_record (user_id,book_id,review_text) VALUES (:uid,:bid,:rtext)",{"uid":id_user,"bid":isbn,"rtext":review_text})
+		db.commit()
+		return redirect('/book/isbn')
+	else:
+		return '<h1> Please register</h1>'
 
 @app.route("/logout")
 def logout():
@@ -108,6 +123,7 @@ def create_account():
 	name=request.form.get("name")
 	username=request.form.get("username")
 	password=request.form.get("password")
+	password=hash(password)
 	# check if the user name already exist then donot allow account making
 	user_conflict=db.execute("SELECT * FROM users_record where username =:username", {"username": username}).fetchone()
 	# if no conflict occur create the account and if some database error occur say that accordingly
@@ -116,7 +132,7 @@ def create_account():
 		db.commit()
 		# creating a session here , that is when user has made a new account
 		session['username']=username
-		return render_template('welcome.html',name=name+" Your account has been created")
+		return redirect('/welcome')
 	else:
 		return render_template('register.html',message="Please try with different user name")
 
@@ -166,7 +182,7 @@ def fetchdata():
 	elif x==None and y==None and z!=None:
 		title=z
 		title='%'+title+'%'
-		booklist=db.execute("SELECT * FROM book_record where title like :title" , {"title":title})
+		booklist=db.execute("SELECT * FROM book_record where title like :title " , {"title":title})
 	elif y==None and z==None and x!=None:
 		isbn=x
 		isbn='%'+isbn+'%'
