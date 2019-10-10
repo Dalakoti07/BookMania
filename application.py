@@ -4,20 +4,25 @@ Prevent the users from making account with invalid username and password and use
 handle various cases
 '''
 
+# https://git.heroku.com/herokubookreview.git
+# install gunicorn==19.9.0 other error in deployment
 from flask import Flask, session,redirect,url_for,render_template,request,jsonify
 import requests
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-
 app = Flask(__name__)
+username=""
+# set the database
+engine = create_engine("postgres://vwmorbylzecqlj:998d4d52cbbfc95f8ec43fd150900ee6c54f8134a66f3a7274f25718fe3f3944@ec2-54-217-207-242.eu-west-1.compute.amazonaws.com:5432/dflmkkdgvk30tu")
+db = scoped_session(sessionmaker(bind=engine))
 
 # setting the session
 app.config["SESSION_PERMANENT"]=False
 app.config["SESSION_TYPE"]="filesystem"
 app.config['SECRET_KEY']='super secret key'
 
-username=""
+
 
 def helper(isbn):
 	isbn='%'+isbn+'%'
@@ -32,24 +37,6 @@ def helper(isbn):
 	book.append(work_reviews_count)
 	return book
 
-# set the database
-engine = create_engine("postgres://wxwjtpitggoati:8dfb1487bafbda798870df37a4691bf46afd7162e0d8f3932e7ae20854cd4f89@ec2-54-75-230-41.eu-west-1.compute.amazonaws.com:5432/d50618rt42i32c")
-db = scoped_session(sessionmaker(bind=engine))
-
-# Check for environment variable
-'''
-if not os.getenv("DATABASE_URL"):
-    raise RuntimeError("DATABASE_URL is not set")
-
-# Configure session to use filesystem
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
-
-# Set up database
-engine = create_engine(os.getenv("DATABASE_URL"))
-db = scoped_session(sessionmaker(bind=engine))
-'''
 
 @app.route("/")
 def index():
@@ -69,14 +56,14 @@ def welcome():
 	name=request.form.get("name")
 	username=request.form.get("username")
 	password=request.form.get("password")
-	password=hash(password)
+	#password=hash(password)
 	# check if the correct user logged in or not
 	password_from_db=db.execute("SELECT password FROM users_record where username =:username", {"username": username}).fetchone()
 	# if we donot find any user then prompt the page saying that wrong credentials entered ,and give the option of forget password
 	if password_from_db is None:# means there is no user
 		return redirect('/register')
 	if password_from_db[0]!=password:
-		return redirect(url_for('/login'))
+		return redirect(url_for('login'))
 		#return render_template('login2.html',message="U have forgot your password or username")
 	# make entry in the session
 	session['username']=username
@@ -123,7 +110,7 @@ def create_account():
 	name=request.form.get("name")
 	username=request.form.get("username")
 	password=request.form.get("password")
-	password=hash(password)
+	#password=hash(password)
 	# check if the user name already exist then donot allow account making
 	user_conflict=db.execute("SELECT * FROM users_record where username =:username", {"username": username}).fetchone()
 	# if no conflict occur create the account and if some database error occur say that accordingly
@@ -225,26 +212,6 @@ def apis(isbn):
 		"average_score":book[4]
 	})
 
-
-# We donot require it @app.route("/api_request",methods=["POST"])# only the pages can ask for the details
-'''def get_info(booklist):
-	
-	data_dict=res.json()
-	print(data_dict['books'][0])# this gives u access to the dictionary now give third parameter as isbn or id or rating count or etc
-	
-	# get the average score for each book
-	# what we should do is make a page for search about the books and then get the information from database into a list and that list passed to this function and then we append more data to it about ,average rating and then at last rendering the page and giving it the data to display in beautiful table format
-	final_list=[]
-	for b in booklist:
-		b=list(b)
-		res=requests.get("https://www.goodreads.com/book/review_counts.json",params={"key":"44ZCyFojgwqbYPzQ2vfw","isbns":b[0]})
-		#b.append(res.json()['books'][0]['average_score'])
-		if res != None:
-			rating=res.json()['books'][0]['average_rating']
-			#rating=str(rating)
-			b=b.append(rating)
-			final_list.append(b)
-		else :# in case we have no ratng for a book
-			final_list.append(b)
-	return final_list
-'''
+if __name__ == '__main__':
+	app.debug=True
+	app.run()
