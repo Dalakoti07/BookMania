@@ -14,7 +14,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 app = Flask(__name__)
 username=""
 # set the database
-engine = create_engine("postgres://vwmorbylzecqlj:998d4d52cbbfc95f8ec43fd150900ee6c54f8134a66f3a7274f25718fe3f3944@ec2-54-217-207-242.eu-west-1.compute.amazonaws.com:5432/dflmkkdgvk30tu")
+engine = create_engine(Urlfordatabase)
 db = scoped_session(sessionmaker(bind=engine))
 
 # setting the session
