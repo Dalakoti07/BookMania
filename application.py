@@ -7,14 +7,18 @@ handle various cases
 # https://git.heroku.com/herokubookreview.git
 # install gunicorn==19.9.0 other error in deployment
 from flask import Flask, session,redirect,url_for,render_template,request,jsonify
+import json
 import requests
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from flask_login import LoginManager,login_user,UserMixin
 app = Flask(__name__)
-username=""
+login_manager = LoginManager()
+login_manager.init_app(app) 
+username="username"
 # set the database
-engine = create_engine(Urlfordatabase)
+engine = create_engine("postgres://vwmorbylzecqlj:998d4d52cbbfc95f8ec43fd150900ee6c54f8134a66f3a7274f25718fe3f3944@ec2-54-217-207-242.eu-west-1.compute.amazonaws.com:5432/dflmkkdgvk30tu")
 db = scoped_session(sessionmaker(bind=engine))
 
 # setting the session
@@ -22,7 +26,18 @@ app.config["SESSION_PERMANENT"]=False
 app.config["SESSION_TYPE"]="filesystem"
 app.config['SECRET_KEY']='super secret key'
 
+# silly user model
+class User(UserMixin):
+    def __init__(self, name,id):
+        self.id = id
+        self.name = name
+        self.password = self.name + "_secret"
 
+    def __repr__(self):
+        return "%d/%s/%s" % (self.id, self.name, self.password)
+	
+    def get(id):
+        return id
 
 def helper(isbn):
 	isbn='%'+isbn+'%'
@@ -37,18 +52,28 @@ def helper(isbn):
 	book.append(work_reviews_count)
 	return book
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
 
 @app.route("/")
 def index():
-	if username!="" :
-	    return render_template('home.html',name=session[username])
+	if username in session.keys():
+		if session[username]!=None :
+			print("username is not null going to welcome ")
+			return redirect(url_for('success'))
 	else:
-	    return render_template('home.html',name="")
+		print("username is null going to home ")
+		return render_template('home.html',name="")
 
 # this is the login page
 @app.route("/login")
 def login():
-	return render_template('login.html')
+	loginStatus=json.dumps({"status":""})
+	if 'loginStatus' in request.args.keys():
+		loginStatus= request.args['loginStatus']
+		loginStatus= session['loginStatus']
+	return render_template('login.html',loginStatus=json.loads(loginStatus))
 
 # this woul be the first page seen by the user when he is loged in
 @app.route("/welcome",methods=["POST","GET"])
@@ -56,17 +81,25 @@ def welcome():
 	name=request.form.get("name")
 	username=request.form.get("username")
 	password=request.form.get("password")
+	loginStatus=None
 	#password=hash(password)
 	# check if the correct user logged in or not
 	password_from_db=db.execute("SELECT password FROM users_record where username =:username", {"username": username}).fetchone()
 	# if we donot find any user then prompt the page saying that wrong credentials entered ,and give the option of forget password
 	if password_from_db is None:# means there is no user
-		return redirect('/register')
+		loginStatus= json.dumps({"status":"No such username exist"})
+		session['loginStatus']=loginStatus
+		return redirect(url_for('login',loginStatus=loginStatus))
+
 	if password_from_db[0]!=password:
-		return redirect(url_for('login'))
+		loginStatus= json.dumps({"status":"Either userName or password is wrong "})
+		session['loginStatus']=loginStatus
+		return redirect(url_for('login',loginStatus=loginStatus))
 		#return render_template('login2.html',message="U have forgot your password or username")
 	# make entry in the session
 	session['username']=username
+	user = User(username,7)
+	login_user(user)
 	return redirect(url_for('success'))
 	#return render_template('welcome2.html')
 
@@ -93,7 +126,7 @@ def logout():
 	# make the user log out from the 
 	# remove the username from the session if it is there
     session.pop('username', None)
-    return redirect('home.html')
+    return redirect(url_for('login'))
 
 # this is the registration page
 @app.route("/register")
@@ -126,7 +159,7 @@ def create_account():
 @app.route("/search")
 def search():
 	return render_template('search.html')
-
+	
 @app.route("/fetchdata",methods=["POST","GET"])
 def fetchdata():
 	# what if user didnot apply any filter
@@ -134,6 +167,7 @@ def fetchdata():
 	y=request.form.get("author")
 	z=request.form.get("title")
 	isbn=author=title=""
+	print ("posted data for fetching is ",x,y,z)
 	if x!=None and y!=None and z!=None:
 		# if user has used all the valid filters
 		isbn=x
@@ -189,8 +223,8 @@ def fetchdata():
 	for b in booklist:
 		list_book.append(b)
 	#return redirect(url_for('.do_foo', messages=messages))
+	# print(str(list_book))
 	return render_template('booklist.html',booklist=list_book)
-	#return str(list_book)
 	# too much work for api donot do it hear booklist=get_info(list_book)
 	#print(booklist)
 

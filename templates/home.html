@@ -3,31 +3,30 @@
 <html>
     <head>
     	<link rel="stylesheet" href="style.css">
-         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+         <!-- Bootstrap CSS -->
+         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
          <meta charset="utf-8">
          <meta name="viewport" content ="width=device-width,initial-scale=1">
         <title>Introduction</title>
     </head>
     <body>
-    	<nav class="navbar navbar-inverse">
-		  <div class="container-fluid">
-		    <div class="navbar-header">
-		      <a class="navbar-brand" >Hi Welcome</a>
-		    </div>
-		    <ul class="nav navbar-nav">
-		      <li class="active"><a href="/">Home</a></li>
-		      <li><a href="/search">Search</a></li>
-		    </ul>
-		  </div>
-		</nav>
-		<div class="jumbotron">
-    <h1 class="display-4">BookMania</h1>
-    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-    <hr class="my-4">
-    <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-    <p class="lead">
-      <a class="btn btn-primary btn-lg" href="/login" role="button">Login</a>
-  </p>
-</div>
+    
+    <!-- banner -->
+    <section>
+      <div class="container-fluid">
+          <div class="row bg-info justify-content-center align-items-center" style="height: 100vh">
+             <div class="col-sm-10 text-center">
+                 <h1 class="display-md-2 display-sm-4 text-capitalize"><span class="text-warning">BookMania</span><span class="text-white font-weight-bold">Website</span></h1>
+                 <h2 class="font-weight-light font-italic text-light">A simple flask app to leverage the power of rest api and using using cloud storage for the same.</h2>
+                 <p class="text-center font-italic text-light">For the source code of the project please visit <a href="https://github.com/Dalakoti07/BookMania" target="_blank"> here </a></p>   
+                 <a href="/login" class="btn btn-warning btn-lg px-4 m-3">Login</a>
+                 <a href="/register" class="btn btn-danger btn-lg px-4 m-3">Register</a>
+             </div>
+          </div>
+      </div>
+  </section>
+  <!-- end of banner -->
+
+
 		</body>
 </html>

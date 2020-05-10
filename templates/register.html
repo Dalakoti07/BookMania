@@ -1,26 +1,7 @@
-<!--Will host /register html file -->
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-  <title>bookMania</title>
-</head>
-<body>
-<nav class="navbar navbar-inverse">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" >bookMania</a>
-        </div>
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="/">Home</a></li>
-          <li><a href="/search">Search</a></li>
-        </ul>
-      </div>
-    </nav>
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
     <div align="center">
     <br>
     <h1>Login To bookMania</h1>
@@ -48,10 +29,9 @@
   <button type="submit" class="btn btn-primary">Submit</button>
   <br>
   <br>
-  <p><b>New to bookMania<a href="/register">Sign up now </a></b></p>
+  <p><b>Already have an account <a href="/login">Sign in now </a></b></p>
 </form>                                                                             
   
 </div>
 
-</body>
-</html>
+{% endblock %}

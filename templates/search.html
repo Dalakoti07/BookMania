@@ -1,26 +1,9 @@
-<!--Will host /search html file -->
-<!DOCTYPE html>
-<html>
-    <head>
-    	<link rel="stylesheet" href="style.css">
-         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-         <meta charset="utf-8">
-         <meta name="viewport" content ="width=device-width,initial-scale=1">
-        <title>Introduction</title>
-    </head>
-    <body>
-    	<nav class="navbar navbar-inverse">
-		  <div class="container-fluid">
-		    <div class="navbar-header">
-		      <a class="navbar-brand" >Hi Welcome</a>
-		    </div>
-		    <ul class="nav navbar-nav">
-		      <li class="active"><a href="/">Home</a></li>
-		      <li><a href="/search">Search</a></li>
-		    </ul>
-		  </div>
-		</nav>
-		<div class="container">
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+<div class="container">
 <form  method="POST" action="{{url_for('fetchdata')}}">
   <div class="form-group">
     <label >ISBN Number</label>
@@ -43,5 +26,4 @@
 </div>
 
 
-		</body>
-</html>
+{% endblock %}
